@@ -126,9 +126,20 @@ Y.namespace('M.atto_popup').Button = Y.Base.create('button', Y.M.editor_atto.Edi
 
         //Set title from selection
         if (this._currentSelection !== false || !this._currentSelection.collapsed) {
-            var title = this._currentSelection[0].commonAncestorContainer.data.toString();
-            title = title.substring(this._currentSelection[0].startOffset, this._currentSelection[0].endOffset);
+            var title = '';
+            var content = '';
+            if (typeof this._currentSelection[0].commonAncestorContainer.length === 'undefined') {
+                if (this._currentSelection[0].startOffset > 0) {
+                    var title = this._currentSelection[0].commonAncestorContainer.textContent;
+                    var content = this._currentSelection[0].commonAncestorContainer.innerHTML;
+                }
+            } else {
+                var title = this._currentSelection[0].commonAncestorContainer.data.toString();
+            }
+            title = title.substring(this._currentSelection[0].startOffset, this._currentSelection[0].endOffset).trim();
+            content = content.trim();
             this._content.one(SELECTORS.TITLEINPUT).set('value', title);
+            this._content.one(SELECTORS.CONTENTINPUT).set('value', content);
         }
         
         this._content.one('.submit').on('click', this._createPopup, this);
